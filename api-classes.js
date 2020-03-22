@@ -24,6 +24,7 @@ class StoryList {
   // class directly. Why doesn't it make sense for getStories to be an instance method?
 
   static async getStories() {
+    //NOTES: I added try and catch
     try {
       // query the /stories endpoint (no auth required)
       const response = await axios.get(`${BASE_URL}/stories`);
@@ -57,16 +58,17 @@ class StoryList {
       const res = await axios({
         method: 'POST',
         url: `${BASE_URL}/stories`,
+        // NOTES: API FORMAT
         data: {
           token: user.loginToken,
           story: newStory
         }
       });
 
-      // mkaes a story instance out of the story object
+      // makes a story instance out of the story object
       newStory = new Story(res.data.story);
 
-      // adds story to the front
+      // adds story to the front of the story list
       this.stories.unshift(newStory);
 
       // adds story to the front of user list
@@ -75,6 +77,7 @@ class StoryList {
 
       return newStory;
     } catch (e) {
+      // NOTES: later add bootstrap modals instead of
       alert(e.response.data.error.message);
       location.reload();
     }
@@ -94,7 +97,7 @@ class StoryList {
         }
       });
 
-      // filter out the story whose ID we are removing
+      // this filters out the story whose ID we are deleting
       this.stories = this.stories.filter(story => story.storyId !== storyId);
 
       //same for user list
@@ -134,6 +137,7 @@ class User {
    */
 
   static async create(username, password, name) {
+    //NOTE: added try and catch
     try {
       const res = await axios.post(`${BASE_URL}/signup`, {
         user: {
@@ -163,6 +167,7 @@ class User {
    */
 
   static async login(username, password) {
+    // NOTE: added try and catch
     try {
       const res = await axios.post(`${BASE_URL}/login`, {
         user: {
@@ -183,6 +188,7 @@ class User {
 
       return existingUser;
     } catch (e) {
+      // later want to add bootstrap modal or alert to display message
       alert(e.response.data.error.message);
       location.reload();
     }
@@ -197,7 +203,7 @@ class User {
   static async getLoggedInUser(token, username) {
     // if we don't have user info, return null
     if (!token || !username) return null;
-
+    //NOTE: adde try and catch
     try {
       // call the API
       const res = await axios.get(`${BASE_URL}/users/${username}`, {
@@ -236,7 +242,7 @@ class User {
       this.createdAt = res.data.user.createdAt;
       this.updatedAt = res.data.user.updatedAt;
 
-      // converts user favorites and ownStories into instances of Story
+      // this converts user favorites and ownStories into instances of Story
       this.favorites = res.data.user.favorites.map(s => new Story(s));
       this.ownStories = res.data.user.stories.map(s => new Story(s));
 
@@ -288,7 +294,7 @@ class User {
         }
       });
 
-      // "name" is really the only property you can update
+      // name is really the only property you can update as stated in api doc files
       this.name = res.data.user.name;
 
       return this;
@@ -335,7 +341,7 @@ class Story {
     this.updatedAt = storyObj.updatedAt;
   }
 
-  // sends a PATCH request to update single story based off storyId
+  // this sends a PATCH request to update single story based off storyId
   async update(user, storyData) {
     try {
       const res = await axios({
@@ -350,7 +356,7 @@ class Story {
       const { author, title, url, updatedAt } = res.data.story;
 
       // these are the only fields that you can change with a PATCH update
-      //  so we don't need to worry about updating the others
+
       this.author = author;
       this.title = title;
       this.url = url;

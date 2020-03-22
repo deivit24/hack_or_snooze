@@ -16,6 +16,7 @@ $(async function() {
   const $navUserProfile = $('#nav-user-profile');
   const $navSubmit = $('#nav-submit');
   const $userProfile = $('#user-profile');
+  // I havent used this one yet
   const $editUser = $('#edit-name-form');
 
   // global storyList variable
@@ -125,13 +126,14 @@ $(async function() {
       </li>
     `);
     $allStoriesList.prepend($li);
-
+    //NOTES: need help debugging the submit form
     // hide the form and reset it
     $submitForm.slideUp('slow');
     $submitForm.trigger('reset');
   });
 
   // Adding stars favorites event handler
+  // Had to see solution, for help on on adding stars
 
   $('.articles-container').on('click', '.star', async function(evt) {
     if (currentUser) {
@@ -165,9 +167,9 @@ $(async function() {
   // Event Handler for On Your Profile
 
   $navUserProfile.on('click', function() {
-    // hide everything
+    // this hides everything
     hideElements();
-    // except the user profile
+    // except the users profile
     $userProfile.show();
   });
 
@@ -228,7 +230,7 @@ $(async function() {
     // hide everyhing
     hideElements();
 
-    // ...except the story list
+    // except the story list
     $allStoriesList.show();
   });
 
